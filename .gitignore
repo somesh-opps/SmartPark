@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+.venv/
+venv/
+env/
+
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins-dependencies
+build/
+**/build/
+.pub-cache/
+.pub/
+
+# IDE / OS files
+.DS_Store
+Thumbs.db
+.idea/
+
+# Secrets and local credentials
+server/firebase_credentials.json
+server/parking-bc5fe-firebase-adminsdk-fbsvc-da2ff2fe6f.json
+firebase_credentials.json
+*.key
+*.pem
+
+cred/
