@@ -1,5 +1,7 @@
 # SmartPark
 
+> Real-time parking visibility across hardware, backend, and mobile.
+
 SmartPark is an end-to-end smart parking system built from three parts:
 
 - an ESP32 firmware layer that reads parking hardware and syncs slot state to Firebase
@@ -8,6 +10,14 @@ SmartPark is an end-to-end smart parking system built from three parts:
 
 The project is designed for real-time parking visibility with a lightweight mobile dashboard.
 
+## At a glance
+
+| Layer | Purpose | Location |
+| --- | --- | --- |
+| Hardware | Reads slot sensors, gate state, and safety telemetry | `Hardware/smaerparking/smartparking.ino` |
+| API | Serves Firebase-backed parking data | `server/main.py` |
+| App | Shows live availability and connection status | `smartpark/lib/main.dart` |
+
 ## What it does
 
 - shows live parking slot availability
@@ -15,6 +25,12 @@ The project is designed for real-time parking visibility with a lightweight mobi
 - lets you configure the API base URL inside the app
 - reads parking data from Firebase Realtime Database
 - supports ESP32-based hardware that publishes slot, gate, and safety telemetry
+
+### Visual flow
+
+```text
+ESP32 hardware -> Firebase Realtime Database -> FastAPI server -> Flutter dashboard
+```
 
 ## Repository layout
 
@@ -34,6 +50,14 @@ SmartPark/
     ├── web/
     └── pubspec.yaml
 ```
+
+## Highlights
+
+- live parking status cards with free and occupied counts
+- automatic refresh every few seconds
+- persistent backend URL storage on the device
+- availability summary and per-slot lookup endpoints
+- ESP32 firmware for slot detection, gate control, and safety alerts
 
 ## Architecture
 
@@ -65,12 +89,21 @@ The hardware layer publishes slot occupancy and safety data to Firebase. The Fas
 - temperature and gas safety telemetry
 - Firebase sync for slot and analytics updates
 
+> Tip: if you are testing on a physical Android device, use your computer's LAN IP instead of `localhost`.
+
 ## Prerequisites
 
 - Flutter SDK 3.10 or newer
 - Python 3.10 or newer
 - ESP32 development environment if you want to flash the hardware firmware
 - A Firebase Realtime Database project
+
+## Quick start
+
+1. Start the backend in `server/`.
+2. Run the Flutter app from `smartpark/`.
+3. Point the app at `http://localhost:8000` or your LAN IP.
+4. Flash the ESP32 sketch if you want live hardware input.
 
 ## Backend setup
 
@@ -101,6 +134,12 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 - `GET /sensors/latest` - returns the newest slot record
 - `GET /sensors/{slot_id}` - returns a single slot record
 - `GET /sensors/availability/summary` - returns total, free, occupied, and availability rate
+
+## Notes
+
+- Keep Firebase credential files out of Git. The repository `.gitignore` already excludes the local credential files used by the server.
+- The Flutter app stores the API base URL locally so you do not need to re-enter it on every launch.
+- If Firebase data is missing, confirm the database path matches the firmware output under `slots/`.
 
 ## Flutter app setup
 
@@ -142,7 +181,6 @@ Before flashing, update the Wi-Fi credentials and Firebase database URL in the s
 
 - Run the backend first, then launch the Flutter app.
 - If the app shows a connection error, verify the API base URL and that port `8000` is reachable.
-- If Firebase data is missing, confirm the database path matches the firmware output under `slots/`.
 
 ## License
 
