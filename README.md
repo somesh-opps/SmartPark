@@ -14,9 +14,24 @@
 
 ---
 
-## ✨ Overview
+## 🗺️ Project Overview
 
-SmartPark is a full-stack IoT parking system that gives you **live slot availability** across three tightly integrated layers:
+**SmartPark** solves the everyday frustration of not knowing where a free parking spot is — before you even enter the lot.
+
+A network of **ESP32-powered sensor nodes** monitors each parking slot in real time using ultrasonic distance sensors and IR-based gate detection. When a vehicle enters or leaves, the hardware instantly pushes an update to **Firebase Realtime Database**. A lightweight **FastAPI server** reads this data and exposes clean REST endpoints. The **Flutter mobile app** polls those endpoints on a short timer and renders a live dashboard showing exactly how many slots are free, which slots are occupied, and the overall availability rate — all updated within seconds.
+
+### Key highlights
+- 🚗 **Zero guesswork** — drivers see real-time slot counts before parking
+- 🔒 **Safe environment** — DHT11 + MQ-2 sensors monitor temperature & gas levels
+- 🌐 **Fully wireless** — ESP32 connects over Wi-Fi; no wiring to a central server
+- 📱 **Cross-platform app** — runs on Android, iOS, and Web from a single codebase
+- ⚡ **Lightweight stack** — FastAPI + Firebase keeps the backend lean and fast
+
+---
+
+## ✨ System Architecture
+
+SmartPark connects physical hardware to a mobile dashboard through three tightly integrated layers:
 
 ```
 ESP32 Sensors  ──▶  Firebase Realtime DB  ──▶  FastAPI Server  ──▶  Flutter App
