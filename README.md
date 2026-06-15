@@ -93,10 +93,22 @@ Update Wi-Fi credentials and Firebase URL in the `.ino` sketch, then flash.
 
 ## 📸 Hardware Preview
 
-| Circuit | LCD Output |
-|:---:|:---:|
-| [![Circuit Image](Hardware/images/Circuit_image.jpeg)](Hardware/images/Circuit_image.jpeg) | [![LCD Output](Hardware/images/LCD_output.jpeg)](Hardware/images/LCD_output.jpeg) |
-| *Wiring & sensor layout* | *Live LCD status display* |
+<table>
+  <tr>
+    <td align="center" width="70%">
+      <a href="Hardware/images/Circuit_image.jpeg">
+        <img src="Hardware/images/Circuit_image.jpeg" width="520" alt="Circuit Image"/>
+      </a>
+      <br/><em>Wiring &amp; sensor layout</em>
+    </td>
+    <td align="center" width="30%">
+      <a href="Hardware/images/LCD_output.jpeg">
+        <img src="Hardware/images/LCD_output.jpeg" width="200" alt="LCD Output"/>
+      </a>
+      <br/><em>Live LCD status display</em>
+    </td>
+  </tr>
+</table>
 
 ---
 
