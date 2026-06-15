@@ -91,6 +91,15 @@ Update Wi-Fi credentials and Firebase URL in the `.ino` sketch, then flash.
 
 ---
 
+## 📸 Hardware Preview
+
+| Circuit | LCD Output |
+|:---:|:---:|
+| [![Circuit Image](Hardware/images/Circuit_image.jpeg)](Hardware/images/Circuit_image.jpeg) | [![LCD Output](Hardware/images/LCD_output.jpeg)](Hardware/images/LCD_output.jpeg) |
+| *Wiring & sensor layout* | *Live LCD status display* |
+
+---
+
 ## 📝 Notes
 
 - 🔒 Never commit `firebase_credentials.json` — it's already in `.gitignore`
