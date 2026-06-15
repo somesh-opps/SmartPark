@@ -1,187 +1,89 @@
-# SmartPark
+<div align="center">
 
-> Real-time parking visibility across hardware, backend, and mobile.
+<h1>🅿️ SmartPark</h1>
 
-SmartPark is an end-to-end smart parking system built from three parts:
+<p><strong>Real-time smart parking — from hardware to your pocket.</strong></p>
 
-- an ESP32 firmware layer that reads parking hardware and syncs slot state to Firebase
-- a FastAPI backend in `server/` that exposes parking data through a simple REST API
-- a Flutter app in `smartpark/` that displays live availability and lets you point the app at your backend
+[![Flutter](https://img.shields.io/badge/Flutter-3.10+-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Firebase](https://img.shields.io/badge/Firebase-Realtime_DB-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com)
+[![ESP32](https://img.shields.io/badge/ESP32-Firmware-E7352C?logo=espressif&logoColor=white)](https://www.espressif.com)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-The project is designed for real-time parking visibility with a lightweight mobile dashboard.
+</div>
 
-## At a glance
+---
 
-| Layer | Purpose | Location |
-| --- | --- | --- |
-| Hardware | Reads slot sensors, gate state, and safety telemetry | `Hardware/smaerparking/smartparking.ino` |
-| API | Serves Firebase-backed parking data | `server/main.py` |
-| App | Shows live availability and connection status | `smartpark/lib/main.dart` |
+## ✨ Overview
 
-## What it does
+SmartPark is a full-stack IoT parking system that gives you **live slot availability** across three tightly integrated layers:
 
-- shows live parking slot availability
-- refreshes data automatically from the backend
-- lets you configure the API base URL inside the app
-- reads parking data from Firebase Realtime Database
-- supports ESP32-based hardware that publishes slot, gate, and safety telemetry
-
-### Visual flow
-
-```text
-ESP32 hardware -> Firebase Realtime Database -> FastAPI server -> Flutter dashboard
+```
+ESP32 Sensors  ──▶  Firebase Realtime DB  ──▶  FastAPI Server  ──▶  Flutter App
 ```
 
-## Repository layout
+| Layer | What it does | Location |
+|---|---|---|
+| 🔌 **Hardware** | Reads sensors, controls gate, sends telemetry | `Hardware/smaerparking/smartparking.ino` |
+| ⚡ **Backend** | Serves Firebase data via REST API | `server/main.py` |
+| 📱 **App** | Live dashboard with auto-refresh | `smartpark/lib/main.dart` |
 
-```text
-SmartPark/
-├── Hardware/
-│   └── smaerparking/
-│       └── smartparking.ino
-├── server/
-│   ├── main.py
-│   ├── requirements.txt
-│   └── firebase_credentials.json
-└── smartpark/
-    ├── lib/
-    ├── android/
-    ├── ios/
-    ├── web/
-    └── pubspec.yaml
-```
+---
 
-## Highlights
+## 🚀 Quick Start
 
-- live parking status cards with free and occupied counts
-- automatic refresh every few seconds
-- persistent backend URL storage on the device
-- availability summary and per-slot lookup endpoints
-- ESP32 firmware for slot detection, gate control, and safety alerts
+**Prerequisites:** Flutter SDK ≥ 3.10 · Python ≥ 3.10 · Firebase project · *(optional)* ESP32 toolchain
 
-## Architecture
-
-The hardware layer publishes slot occupancy and safety data to Firebase. The FastAPI server reads that Firebase data and exposes it through endpoints used by the Flutter dashboard. The Flutter app polls the backend on a timer and renders the current parking state.
-
-## Features
-
-### Flutter dashboard
-
-- live parking status cards
-- free vs occupied counts
-- automatic refresh every few seconds
-- configurable backend URL for local network testing
-- persistence of the selected API endpoint with `shared_preferences`
-
-### FastAPI backend
-
-- health check endpoint
-- slot list endpoint with pagination
-- latest slot endpoint
-- individual slot lookup
-- availability summary endpoint
-
-### ESP32 firmware
-
-- ultrasonic slot sensing
-- IR-assisted gate logic
-- servo gate control
-- temperature and gas safety telemetry
-- Firebase sync for slot and analytics updates
-
-> Tip: if you are testing on a physical Android device, use your computer's LAN IP instead of `localhost`.
-
-## Prerequisites
-
-- Flutter SDK 3.10 or newer
-- Python 3.10 or newer
-- ESP32 development environment if you want to flash the hardware firmware
-- A Firebase Realtime Database project
-
-## Quick start
-
-1. Start the backend in `server/`.
-2. Run the Flutter app from `smartpark/`.
-3. Point the app at `http://localhost:8000` or your LAN IP.
-4. Flash the ESP32 sketch if you want live hardware input.
-
-## Backend setup
-
-1. Open the `server/` folder.
-2. Create a virtual environment and install dependencies:
-
+### 1 — Backend
 ```bash
-python -m venv .venv
-.venv\Scripts\activate
+cd server
+python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-```
-
-3. Make sure Firebase credentials are available locally. The server looks for:
-
-- `server/firebase_credentials.json`
-- or Firebase values in environment variables
-
-4. Start the server:
-
-```bash
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
+> Place your `firebase_credentials.json` in `server/` or export Firebase values as env vars.
 
-### Backend endpoints
-
-- `GET /health` - checks whether Firebase is connected
-- `GET /sensors?limit=100&skip=0` - returns parking slot data
-- `GET /sensors/latest` - returns the newest slot record
-- `GET /sensors/{slot_id}` - returns a single slot record
-- `GET /sensors/availability/summary` - returns total, free, occupied, and availability rate
-
-## Notes
-
-- Keep Firebase credential files out of Git. The repository `.gitignore` already excludes the local credential files used by the server.
-- The Flutter app stores the API base URL locally so you do not need to re-enter it on every launch.
-- If Firebase data is missing, confirm the database path matches the firmware output under `slots/`.
-
-## Flutter app setup
-
-1. Open the `smartpark/` folder.
-2. Get dependencies:
-
+### 2 — Flutter App
 ```bash
+cd smartpark
 flutter pub get
+flutter run --dart-define=API_BASE_URL=http://<YOUR_LAN_IP>:8000
 ```
 
-3. Run the app and point it at your backend if needed:
+### 3 — ESP32 *(optional)*
+Update Wi-Fi credentials and Firebase URL in the `.ino` sketch, then flash.
 
-```bash
-flutter run --dart-define=API_BASE_URL=http://localhost:8000
-```
+---
 
-If you are running the backend on another machine, replace `localhost` with that machine's LAN IP.
+## 🛠 API Endpoints
 
-## ESP32 firmware
+| Method | Route | Description |
+|---|---|---|
+| `GET` | `/health` | Firebase connection status |
+| `GET` | `/sensors` | All slot records *(paginated)* |
+| `GET` | `/sensors/latest` | Newest slot record |
+| `GET` | `/sensors/{id}` | Single slot lookup |
+| `GET` | `/sensors/availability/summary` | Free / occupied counts |
 
-The hardware sketch lives at `Hardware/smaerparking/smartparking.ino`.
+---
 
-It is configured for:
+## ⚙️ Hardware Capabilities
 
-- multiple ultrasonic slot sensors
-- one IR sensor for gate logic
-- a servo motor for the barrier
-- DHT11 and MQ-2 safety monitoring
+- **Ultrasonic** slot occupancy sensing
+- **IR** gate trigger logic + **servo** barrier control
+- **DHT11** temperature & **MQ-2** gas safety monitoring
+- Firebase sync for real-time analytics
 
-Before flashing, update the Wi-Fi credentials and Firebase database URL in the sketch to match your environment.
+---
 
-## Configuration notes
+## 📝 Notes
 
-- Keep Firebase credential files out of Git. The repository `.gitignore` already excludes the local credential files used by the server.
-- The Flutter app stores the API base URL locally so you do not need to re-enter it on every launch.
-- For Android devices, use a reachable LAN IP for the backend instead of `localhost`.
+- 🔒 Never commit `firebase_credentials.json` — it's already in `.gitignore`
+- 📡 On Android devices, use your machine's **LAN IP**, not `localhost`
+- 🗂 Firebase slot data lives under the `slots/` path in your Realtime DB
 
-## Development tips
+---
 
-- Run the backend first, then launch the Flutter app.
-- If the app shows a connection error, verify the API base URL and that port `8000` is reachable.
+## 📄 License
 
-## License
-
-No license has been specified yet.
+Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for details.
